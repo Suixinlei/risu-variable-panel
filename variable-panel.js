@@ -1,7 +1,7 @@
 //@name variable_panel
 //@display-name 变量面板
 //@api 3.0
-//@version 1.0.0
+//@version 1.0.1
 
 // 变量面板 — 酒馆助手风格的聊天变量编辑器
 //
@@ -131,9 +131,7 @@
         return char;
     }
 
-    async function reload() {
-        if (S.loading) return;
-        S.loading = true;
+    async function reloadInternal() {
         setStatus('加载中…');
         try {
             const char = await loadChar();
@@ -203,6 +201,14 @@
             setStatus('');
         } catch (e) {
             setStatus('加载失败: ' + ((e && e.message) || String(e)));
+        }
+    }
+
+    async function reload() {
+        if (S.loading) return;
+        S.loading = true;
+        try {
+            await reloadInternal();
         } finally {
             S.loading = false;
         }
@@ -244,7 +250,7 @@
             chat.scriptstate = cur.vars;
             chat.GLGlobalVariables = cur.gl;
             await risuai.setCharacter(fresh);
-            await reload();
+            await reloadInternal();
             toast('已保存 ✓');
         } catch (e) {
             setStatus('保存失败: ' + ((e && e.message) || String(e)));
