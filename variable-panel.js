@@ -1,7 +1,10 @@
 //@name variable_panel
 //@display-name 变量面板
 //@api 3.0
-//@version 1.1.0
+//@version 1.1.1
+//@update-url https://raw.githubusercontent.com/Suixinlei/risu-variable-panel/main/variable-panel.js
+//@link https://github.com/Suixinlei/risu-variable-panel Documentation
+//@link https://github.com/Suixinlei/risu-variable-panel/issues Issues
 
 // 变量面板 — 酒馆助手风格的聊天变量编辑器 + 变量协议加速器
 //

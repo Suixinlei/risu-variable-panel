@@ -76,6 +76,7 @@ RisuAI manages saves with an "active tab" protocol: once a **second tab** opens 
 
 ## Changelog
 
-- **1.1.0** macro accelerator: immediate execution of `{{setvar}}` (generic, card-format-agnostic)
+- **1.1.1** add `//@update-url`/`//@link` headers — one-click updates from GitHub raw
+- 1.1.0 macro accelerator: immediate execution of `{{setvar}}` (generic, card-format-agnostic)
 - 1.0.1 fix: panel stuck on "saving…" after a successful save
 - 1.0.0 initial release: the variable table editor
