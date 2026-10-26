@@ -6,6 +6,8 @@ A RisuAI plugin — a SillyTavern-helper-style chat variable editor, plus a card
 
 Single file, zero dependencies: `variable-panel.js` (plugin API v3.0).
 
+![Variable Panel](docs/panel.png)
+
 ## Features
 
 ### 1. Variable table (editor)
