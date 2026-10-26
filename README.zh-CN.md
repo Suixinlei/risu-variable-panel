@@ -6,6 +6,14 @@ RisuAI 插件 —— 酒馆助手风格的聊天变量编辑器,外加一个与�
 
 单文件、零依赖:`variable-panel.js`(插件 API v3.0)。
 
+## 三步安装
+
+1. [下载 variable-panel.js](https://github.com/Suixinlei/risu-variable-panel/releases/latest/download/variable-panel.js)（保存 JS 文件，无需下载源码 ZIP）。
+2. RisuAI → **设置 → 插件 → `+` 导入**，选择该文件。
+3. 打开角色聊天，点击右上角 **🧮** 或输入框 `⋮` → **变量面板**。首次权限提示按需允许。
+
+[版本与更新说明](https://github.com/Suixinlei/risu-variable-panel/releases) · [反馈问题](https://github.com/Suixinlei/risu-variable-panel/issues) · [MIT 许可证](LICENSE)
+
 ![变量面板](docs/panel.png)
 
 ## 功能
@@ -40,16 +48,14 @@ AI 消息落库后,**立即执行消息里的 `{{setvar::键::值}}` 宏**并写
 
 这样 AI 只要照常输出状态块,变量就自动更新、新角色自动建变量;AI 消息里的宏会在下一次生成前被原生执行并**自动从消息中清除**(一次性,不会重复计)。本插件负责让这一切即时生效,并提供查看/手改的界面。
 
-参考实现:`local/build_varprotocol.py`(조교 아카데미 卡的变量协议四件套构建器,含 varId 名字归一)。
 
-## 安装
+## 兼容性与更新
 
-RisuAI 没有插件商店,导入文件就是官方安装方式(Realm 只收角色卡和世界书)。获取文件的两条路:
-
-1. 打开本仓库的 [`variable-panel.js`](variable-panel.js) → 点 **Raw** → 网页另存为 `variable-panel.js`(或 `Code → Download ZIP` 解压);
-2. RisuAI → 设置 → 插件 → **导入插件**(`+` 按钮)→ 选择该文件。
-
-要求较新的 RisuAI(插件 API v3.0,2025 年以后的版本)。首次导入后,后续升级在插件列表里点更新按钮即可(`//@update-url` 头指向本仓库 raw 文件后生效)。
+- 需要 **RisuAI 插件 API 3.0**。不能仅凭发布年份判断是否兼容。
+- 当前发布未完成跨版本、桌面端和移动端兼容性验收；现有截图是界面展示，不代表这些平台全部通过测试。
+- 已配置更新地址；后续版本可在插件列表出现更新提示后点击更新。更新内容来自本仓库 `main` 分支。
+- 下载遇到问题时，可从 [Release 页面](https://github.com/Suixinlei/risu-variable-panel/releases/latest) 的 **Assets** 下载 `variable-panel.js`。
+- [可重复的验收步骤与本次检查结果](docs/verification.md)。反馈问题请注明 RisuAI 版本、运行平台、插件版本和复现步骤，勿附密钥或私人聊天。
 
 ## 使用
 
@@ -78,6 +84,8 @@ RisuAI 用"活动标签页"协议管理存档:同一浏览器里**第二个标�
 - 出现"标签页已停用"弹窗时,先处理弹窗再改变量。单标签页使用完全没有此问题。
 
 ## 版本历史
+
+- **1.1.2** 修复宏变量名与平台存储键的映射，`setvar` 的裸键正确对应聊天变量中的 `$` 前缀键。
 
 - **1.1.1** 增加 `//@update-url`/`//@link` 头——装一次即可从 GitHub raw 一键更新
 

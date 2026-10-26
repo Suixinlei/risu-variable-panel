@@ -6,6 +6,14 @@ A RisuAI plugin — a SillyTavern-helper-style chat variable editor, plus a card
 
 Single file, zero dependencies: `variable-panel.js` (plugin API v3.0).
 
+## Quick install
+
+1. [Download variable-panel.js](https://github.com/Suixinlei/risu-variable-panel/releases/latest/download/variable-panel.js) — save the JS file; no build required.
+2. RisuAI → **Settings → Plugins → `+` Import** → select the file.
+3. Open a character chat → **🧮** at the top-right, or input menu `⋮` → **变量面板**. Review the permission prompt on first use.
+
+[Releases](https://github.com/Suixinlei/risu-variable-panel/releases) · [Report an issue](https://github.com/Suixinlei/risu-variable-panel/issues) · [MIT license](LICENSE)
+
 ![Variable Panel](docs/panel.png)
 
 ## Features
@@ -39,16 +47,14 @@ The plugin deliberately does **not** parse card output formats — every card's 
 
 The AI just keeps emitting its usual status block; variables update automatically and new characters get variables automatically. Macros in a message are executed natively before the next generation and then **automatically stripped from the message** (one-shot, never double-counted). This plugin makes all of it instant and gives you the editing UI.
 
-Reference implementation: `local/build_varprotocol.py` in the RisuAI repo (the variable-protocol builder for the 조교 아카데미 card, including varId name normalization).
 
-## Install
+## Compatibility and updates
 
-RisuAI has no plugin marketplace — importing the file *is* the official way (Realm only hosts characters and lorebooks). Two ways to get the file:
-
-1. Open [`variable-panel.js`](variable-panel.js) in this repo → **Raw** → save the page as `variable-panel.js` (or `Code → Download ZIP` and extract);
-2. RisuAI → Settings → Plugins → **Import plugin** (`+` button) → pick the file.
-
-Requires a reasonably recent RisuAI (plugin API v3.0, 2025+). After the first import, future upgrades are one click in the plugin list (update button) once the `//@update-url` header points at this repo's raw file.
+- Requires **RisuAI plugin API 3.0**; release year alone does not establish compatibility.
+- Cross-version, desktop and mobile acceptance has not been completed for this release. The existing screenshot demonstrates the UI, not compatibility across all platforms.
+- The update URL is configured. Use the plugin list update button when an update is offered; updates come from this repository’s `main` branch.
+- If the direct download fails, select `variable-panel.js` under **Assets** on the [latest release](https://github.com/Suixinlei/risu-variable-panel/releases/latest).
+- See [repeatable acceptance steps and release checks](docs/verification.md). Include RisuAI version, platform, plugin version and reproduction steps in issues; omit credentials and private chats.
 
 ## Usage
 
@@ -75,6 +81,8 @@ RisuAI manages saves with an "active tab" protocol: once a **second tab** opens 
 - If the "tab deactivated" dialog appears, handle it before touching variables. Single-tab usage is unaffected.
 
 ## Changelog
+
+- **1.1.2** Fix macro key mapping: bare `setvar` keys correctly map to `$`-prefixed chat storage keys.
 
 - **1.1.1** add `//@update-url`/`//@link` headers — one-click updates from GitHub raw
 - 1.1.0 macro accelerator: immediate execution of `{{setvar}}` (generic, card-format-agnostic)
