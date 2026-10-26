@@ -43,8 +43,12 @@ Reference implementation: `local/build_varprotocol.py` in the RisuAI repo (the v
 
 ## Install
 
-RisuAI → Settings → Plugins → Import plugin, and pick `variable-panel.js`.
-Requires a reasonably recent RisuAI (plugin API v3.0, 2025+).
+RisuAI has no plugin marketplace — importing the file *is* the official way (Realm only hosts characters and lorebooks). Two ways to get the file:
+
+1. Open [`variable-panel.js`](variable-panel.js) in this repo → **Raw** → save the page as `variable-panel.js` (or `Code → Download ZIP` and extract);
+2. RisuAI → Settings → Plugins → **Import plugin** (`+` button) → pick the file.
+
+Requires a reasonably recent RisuAI (plugin API v3.0, 2025+). After the first import, future upgrades are one click in the plugin list (update button) once the `//@update-url` header points at this repo's raw file.
 
 ## Usage
 

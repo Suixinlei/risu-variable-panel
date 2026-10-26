@@ -44,8 +44,12 @@ AI 消息落库后,**立即执行消息里的 `{{setvar::键::值}}` 宏**并写
 
 ## 安装
 
-RisuAI → 设置 → 插件 → 导入插件,选择 `variable-panel.js`。
-要求较新的 RisuAI(插件 API v3.0,2025 年以后的版本)。
+RisuAI 没有插件商店,导入文件就是官方安装方式(Realm 只收角色卡和世界书)。获取文件的两条路:
+
+1. 打开本仓库的 [`variable-panel.js`](variable-panel.js) → 点 **Raw** → 网页另存为 `variable-panel.js`(或 `Code → Download ZIP` 解压);
+2. RisuAI → 设置 → 插件 → **导入插件**(`+` 按钮)→ 选择该文件。
+
+要求较新的 RisuAI(插件 API v3.0,2025 年以后的版本)。首次导入后,后续升级在插件列表里点更新按钮即可(`//@update-url` 头指向本仓库 raw 文件后生效)。
 
 ## 使用
 
