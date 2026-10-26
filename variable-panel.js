@@ -1,7 +1,7 @@
 //@name variable_panel
 //@display-name 变量面板
 //@api 3.0
-//@version 1.1.1
+//@version 1.1.2
 //@update-url https://raw.githubusercontent.com/Suixinlei/risu-variable-panel/main/variable-panel.js
 //@link https://github.com/Suixinlei/risu-variable-panel Documentation
 //@link https://github.com/Suixinlei/risu-variable-panel/issues Issues
@@ -645,10 +645,15 @@
                     if (!msg || msg.role === 'user') return;
                     const data = msg.data || '';
                     if (data.indexOf('{{setvar::') === -1) return;
+                    // 平台语义: 宏里写裸键,存储自动加 $ 前缀——此处对齐,两种写法都兼容
                     const re = /\{\{setvar::([^:{}]+)::([^{}]*)\}\}/g;
                     const updates = {};
                     let m;
-                    while ((m = re.exec(data))) updates[m[1]] = m[2];
+                    const pf = String.fromCharCode(36);
+                    while ((m = re.exec(data))) {
+                        const k = m[1][0] === pf ? m[1] : pf + m[1];
+                        updates[k] = m[2];
+                    }
                     const keys = Object.keys(updates);
                     if (!keys.length) return;
                     const fresh = await loadChar();
