@@ -1,76 +1,75 @@
-# 变量面板
+# Variable Panel
 
-RisuAI 插件 —— 酒馆助手风格的聊天变量编辑器,外加一个与卡无关的「变量协议加速器」。
+[English](README.md) | [简体中文](README.zh-CN.md)
 
-单文件、零依赖:`variable-panel.js`(插件 API v3.0)。
+A RisuAI plugin — a SillyTavern-helper-style chat variable editor, plus a card-agnostic **variable protocol accelerator**.
 
-## 功能
+Single file, zero dependencies: `variable-panel.js` (plugin API v3.0).
 
-### 一、变量表(编辑器)
+## Features
 
-- **聊天变量表**:读写当前聊天的变量,与 `{{getvar}}` / `{{setvar}}` / Lua `chatvar` / `/setvar` 命令完全同源,按聊天隔离
-- **JSON 友好**:JSON 对象/数组自动格式化展示、标记 JSON 徽章,保存时自动压缩回单行;坏 JSON 红框提示
-- **未写入的默认变量**:角色/预设里定义了默认值但本聊天尚未落地的变量单独列出,一键写入
-- **全局变量·覆盖**:管理本聊天对全局变量的覆盖层(`{{getglobalvar}}` 优先读取),新增时可先查询当前全局值
-- 搜索过滤、新增/重命名/删除、未保存更改计数、**聊天切换保护**(切换聊天后不会写错位置)
-- 两个入口:右上角悬浮按钮 🧮 + 聊天输入框 `⋮` 菜单里的「变量面板」
+### 1. Variable table (editor)
 
-### 二、宏加速器(v1.1.0)
+- **Chat variables**: read/write the current chat's variables — same source of truth as `{{getvar}}` / `{{setvar}}` / Lua `chatvar` / the `/setvar` command; isolated per chat
+- **JSON friendly**: objects/arrays are pretty-printed with a JSON badge and compacted back on save; invalid JSON is flagged in red
+- **Unwritten defaults**: variables defined in the character/preset but not yet materialized in this chat are listed separately — write them in with one click
+- **Global variable overrides**: manage this chat's override layer (`{{getglobalvar}}` reads it first); you can query the current global value before adding one
+- Search/filter, add/rename/delete, unsaved-change counter, **chat-switch guard** (a stale panel can never write to the wrong chat)
+- Two entry points: the 🧮 floating button (top-right) and "变量面板" in the input box `⋮` menu
 
-AI 消息落库后,**立即执行消息里的 `{{setvar::键::值}}` 宏**并写入变量。
+### 2. Macro accelerator (v1.1.0)
 
-- **与卡无关**:只认 RisuAI 平台宏语法,不解析任何卡的私有输出格式
-- **无需原生等待**:不加速时这些宏要等到下一次生成前才被原生执行(值会晚一轮);加速器把这一轮延迟消掉,打开面板就能看到最新值
-- **只加速绝对值 `setvar`**:`{{addvar}}` 交给原生执行——插件和原生各执行一次会双重累加,而 setvar 是幂等的,双执行无害
-- **权限**:首次打开面板时会弹一次 replacer 权限确认,点允许即可;不点也不影响正确性(只是值晚一轮)
-- 触发条件是"消息里出现了 `{{setvar::` 字样",所以没接变量协议的卡完全无感,零开销
+When an AI message lands, **immediately execute any `{{setvar::key::value}}` macros inside it** and write the values.
 
-## 与「变量协议」卡配合(推荐玩法)
+- **Card-agnostic**: it only recognizes RisuAI platform macro syntax and never parses a card's private output format
+- **No native wait**: without acceleration those macros execute natively only right before the *next* generation (values lag one turn); the accelerator removes that lag — open the panel and values are already up to date
+- **Only absolute `setvar` is accelerated**: `{{addvar}}` is left to the native engine — plugin + native each executing an addvar would double-count, while setvar is idempotent and therefore safe
+- **Permission**: the first time you open the panel, a one-time "replacer" permission dialog appears — click allow. Denying it costs nothing but the one-turn lag
+- It only triggers when the literal `{{setvar::` appears in a message, so cards without a variable protocol never pay anything
 
-插件故意**不**解析卡的输出格式——不同卡的 statusData 各不相同,硬编码就是打地鼠。
-通用做法是把"变量语义"留在卡里,用平台原生宏做协议:
+## Pairing with a "variable protocol" card (recommended)
 
-1. 卡里加一条 **editoutput 正则**,把卡自己的状态块(如 `<statusData>…</statusData>`)机械转换成追加的 `{{setvar}}` 宏;
-2. 卡里加一条 **editdisplay 正则**隐藏宏文本(纯显示层,不碰存档);
-3. 卡的 lorebook 里放一个**真值注入条目**(`{{getvar}}` 动态展开当前值 + 指示 AI 回显真值),防数值漂移。
+The plugin deliberately does **not** parse card output formats — every card's status block is different, and hardcoding them is whack-a-mole. The generic recipe keeps variable semantics *inside the card*, on top of native macros:
 
-这样 AI 只要照常输出状态块,变量就自动更新、新角色自动建变量;AI 消息里的宏会在下一次生成前被原生执行并**自动从消息中清除**(一次性,不会重复计)。本插件负责让这一切即时生效,并提供查看/手改的界面。
+1. An **editoutput regex** in the card mechanically converts its own status block (e.g. `<statusData>…</statusData>`) into appended `{{setvar}}` macros;
+2. An **editdisplay regex** hides the macro text (display-only, never touches stored data);
+3. A **truth-injection lorebook entry** (`{{getvar}}` expands current values + instructs the AI to echo them) prevents numeric drift.
 
-参考实现:`local/build_varprotocol.py`(조교 아카데미 卡的变量协议四件套构建器,含 varId 名字归一)。
+The AI just keeps emitting its usual status block; variables update automatically and new characters get variables automatically. Macros in a message are executed natively before the next generation and then **automatically stripped from the message** (one-shot, never double-counted). This plugin makes all of it instant and gives you the editing UI.
 
-## 安装
+Reference implementation: `local/build_varprotocol.py` in the RisuAI repo (the variable-protocol builder for the 조교 아카데미 card, including varId name normalization).
 
-RisuAI → 设置 → 插件 → 导入插件,选择 `variable-panel.js`。
-要求较新的 RisuAI(插件 API v3.0,2025 年以后的版本)。
+## Install
 
-## 使用
+RisuAI → Settings → Plugins → Import plugin, and pick `variable-panel.js`.
+Requires a reasonably recent RisuAI (plugin API v3.0, 2025+).
 
-1. 打开任意角色的聊天,点右上角 🧮(首次会弹权限确认,点允许)
-2. 直接在表格里改值,`＋ 新增` 加变量,`✕` 删除
-3. 点 **保存**。界面上的 `{{getvar}}` 内容会随消息重渲染更新;如果卡片的状态面板没立刻刷新,随便发一条消息即可
-4. 加速器无需任何操作,装好即生效
+## Usage
 
-## 实现说明
+1. Open any character's chat and click 🧮 top-right (a permission dialog appears the first time — allow it)
+2. Edit values in the table, `＋` to add a variable, `✕` to delete
+3. Click **Save**. `{{getvar}}` content re-renders with the next message; if a card's status panel looks stale, just send any message
+4. The accelerator needs no action at all — it works as soon as installed
 
-| 层 | 存储位置 | 读写方式 |
+## Implementation notes
+
+| Layer | Storage | Read/write path |
 |---|---|---|
-| 聊天变量 | `characters[i].chats[chatPage].scriptstate`(`$` 前缀键) | `risuai.getCharacter()` 快照 → 修改 → `risuai.setCharacter()` 写回 |
-| 全局变量覆盖 | 同上 chat 对象的 `GLGlobalVariables` | 同上 |
-| 宏加速器 | 消息文本里的 `{{setvar}}` | `risuai.addRisuChatListener('output')` → 正则提取 → 同一条写回路径(含聊天切换守卫) |
+| Chat variables | `characters[i].chats[chatPage].scriptstate` (`$`-prefixed keys) | `risuai.getCharacter()` snapshot → mutate → `risuai.setCharacter()` |
+| Global overrides | `GLGlobalVariables` on the same chat object | same |
+| Macro accelerator | `{{setvar}}` macros in message text | `risuai.addRisuChatListener('output')` → regex extract → the same write path (with chat-switch guard) |
 
-时序:AI 输出 → (卡协议)editoutput 追加宏 → **加速器即时写入** → 下一轮生成前原生 runVar 再执行一遍(幂等)并把宏从消息文本中清除。
+Timing: AI output → (card protocol) editoutput appends macros → **accelerator writes immediately** → before the next generation the native runVar pass executes them again (idempotent) and strips the macros from the message.
 
-## 注意:多标签页同时开 RisuAI 时
+## Warning: multiple tabs on the same instance
 
-RisuAI 用"活动标签页"协议管理存档:同一浏览器里**第二个标签页**打开同一实例后,后保存的一方会让先前的标签页弹出
-"当前标签页已停用"的对话框,点掉后整页重载,内存里尚未写盘的修改会丢失——`/setvar`、面板保存都会受影响。
-这是 RisuAI 本身的机制(和手机+桌面同时开自托管实例要"双端都关页面再改库"是同一件事)。
+RisuAI manages saves with an "active tab" protocol: once a **second tab** opens the same instance, whichever tab saves later deactivates the earlier one — a "this tab is deactivated" dialog pops up, and dismissing it reloads the page, losing in-memory changes that hadn't been flushed. `/setvar` and panel saves are both affected. This is RisuAI's own mechanism (same reason you must close both desktop and phone pages on a self-hosted instance before patching the save file).
 
-- 面板保存后,请不要在另一个同源标签页活动时立刻关闭/刷新页面;
-- 出现"标签页已停用"弹窗时,先处理弹窗再改变量。单标签页使用完全没有此问题。
+- After saving from the panel, don't close/refresh immediately while another same-origin tab is active;
+- If the "tab deactivated" dialog appears, handle it before touching variables. Single-tab usage is unaffected.
 
-## 版本历史
+## Changelog
 
-- **1.1.0** 宏加速器:`{{setvar}}` 即时执行(通用、与卡格式无关)
-- 1.0.1 修复保存后界面卡在"保存中…"的问题
-- 1.0.0 首版:变量表编辑器
+- **1.1.0** macro accelerator: immediate execution of `{{setvar}}` (generic, card-format-agnostic)
+- 1.0.1 fix: panel stuck on "saving…" after a successful save
+- 1.0.0 initial release: the variable table editor
