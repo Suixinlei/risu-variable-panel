@@ -1,7 +1,7 @@
 //@name variable_panel
 //@display-name 变量面板
 //@api 3.0
-//@version 1.0.1
+//@version 1.1.0
 
 // 变量面板 — 酒馆助手风格的聊天变量编辑器
 //
@@ -620,7 +620,55 @@
         toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
     }
 
+    // ── 宏加速器(v1.1.0) ─────────────────────────────────────────────
+    // AI 消息落库后,立即执行其中的 {{setvar::键::值}} 宏(平台宏语法,与卡的输出格式无关)。
+    // 只处理绝对值 setvar(幂等,原生 runVar 下轮重复执行无害);addvar 交给原生,
+    // 避免"插件+原生"双重累加。监听器在面板首次打开时注册,避免每次启动弹权限框。
+    let accelRegistered = false;
+    async function registerAccelerator() {
+        if (accelRegistered) return;
+        accelRegistered = true;
+        try {
+            await risuai.addRisuChatListener('output', async (arg) => {
+                try {
+                    const chat = arg && arg.chat;
+                    const mi = arg && arg.messageIndex;
+                    if (!chat || mi == null || mi < 0) return;
+                    const msg = chat.message && chat.message[mi];
+                    if (!msg || msg.role === 'user') return;
+                    const data = msg.data || '';
+                    if (data.indexOf('{{setvar::') === -1) return;
+                    const re = /\{\{setvar::([^:{}]+)::([^{}]*)\}\}/g;
+                    const updates = {};
+                    let m;
+                    while ((m = re.exec(data))) updates[m[1]] = m[2];
+                    const keys = Object.keys(updates);
+                    if (!keys.length) return;
+                    const fresh = await loadChar();
+                    const target = fresh.chats && fresh.chats[fresh.chatPage];
+                    if (!target) return;
+                    if (chat.id && target.id && chat.id !== target.id) return;
+                    const ss = Object.assign({}, target.scriptstate || {});
+                    let changed = false;
+                    for (let i = 0; i < keys.length; i++) {
+                        const k = keys[i];
+                        if (ss[k] !== updates[k]) { ss[k] = updates[k]; changed = true; }
+                    }
+                    if (!changed) return;
+                    target.scriptstate = ss;
+                    await risuai.setCharacter(fresh);
+                    console.log('[var-panel] 宏加速器: ' + keys.length + ' 个 setvar 已即时生效');
+                } catch (e) {
+                    console.error('[var-panel] 宏加速器出错:', e);
+                }
+            });
+        } catch (e) {
+            console.error('[var-panel] 监听器注册失败(需要 replacer 权限):', e);
+        }
+    }
+
     async function openPanel() {
+        registerAccelerator();
         buildUI();
         await risuai.showContainer('fullscreen');
         await reload();
