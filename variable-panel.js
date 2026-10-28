@@ -1,7 +1,7 @@
 //@name variable_panel
 //@display-name 变量面板
 //@api 3.0
-//@version 1.1.2
+//@version 1.2.0
 //@update-url https://raw.githubusercontent.com/Suixinlei/risu-variable-panel/main/variable-panel.js
 //@link https://github.com/Suixinlei/risu-variable-panel Documentation
 //@link https://github.com/Suixinlei/risu-variable-panel/issues Issues
@@ -283,41 +283,41 @@
             box-shadow: 0 12px 48px rgba(0,0,0,.6);
             display: flex; flex-direction: column; overflow: hidden;
         }
-        #header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid #2c2c2c; }
+        #header { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid #2c2c2c; }
         #title { font-size: 16px; font-weight: 700; }
         #sub { color: #9a9a9a; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         #close { margin-left: auto; background: none; border: none; color: #9a9a9a; font-size: 18px; cursor: pointer; padding: 4px 8px; border-radius: 6px; }
         #close:hover { background: #2c2c2c; color: #fff; }
-        #toolbar { display: flex; align-items: center; gap: 8px; padding: 10px 16px; flex-wrap: wrap; }
-        .tab { background: #262626; color: #bbb; border: 1px solid #333; border-radius: 999px; padding: 5px 14px; cursor: pointer; font-size: 13px; }
+        #toolbar { display: flex; align-items: center; gap: 6px; padding: 8px 12px; flex-wrap: wrap; }
+        .tab { background: #262626; color: #bbb; border: 1px solid #333; border-radius: 999px; padding: 4px 10px; cursor: pointer; font-size: 13px; }
         .tab.active { background: #1d4ed8; border-color: #1d4ed8; color: #fff; }
         #search { background: #141414; border: 1px solid #333; border-radius: 8px; color: #e5e5e5; padding: 6px 10px; width: 150px; font-size: 13px; outline: none; }
         #search:focus { border-color: #3b82f6; }
-        .btn { border-radius: 8px; padding: 6px 14px; font-size: 13px; cursor: pointer; border: 1px solid #333; background: #262626; color: #e5e5e5; }
+        .btn { border-radius: 8px; padding: 5px 10px; font-size: 13px; cursor: pointer; border: 1px solid #333; background: #262626; color: #e5e5e5; }
         .btn:hover { background: #303030; }
         .btn.primary { background: #3b82f6; border-color: #3b82f6; color: #fff; }
         .btn.primary:disabled { background: #262626; border-color: #333; color: #666; cursor: default; }
         .btn.primary:hover:not(:disabled) { background: #2563eb; }
-        #body { flex: 1; overflow-y: auto; padding: 4px 16px 12px; }
-        .thead, .row { display: grid; grid-template-columns: 200px 1fr 56px; gap: 10px; align-items: start; padding: 8px 0; }
-        .thead { color: #888; font-size: 12px; border-bottom: 1px solid #2c2c2c; position: sticky; top: 0; background: #1e1e1e; z-index: 1; padding-top: 10px; }
+        #body { flex: 1; min-height: 0; overflow-y: auto; padding: 0 12px 8px; }
+        .thead, .row { display: grid; grid-template-columns: minmax(120px, 26%) minmax(0, 1fr) 28px; gap: 8px; align-items: start; padding: 4px 0; }
+        .thead { color: #888; font-size: 12px; border-bottom: 1px solid #2c2c2c; position: sticky; top: 0; background: #1e1e1e; z-index: 1; padding-top: 6px; }
         .row { border-bottom: 1px solid #242424; }
         .row.new .key { border-color: #3b82f6; }
         .key {
             background: #141414; border: 1px solid #333; border-radius: 8px; color: #e5e5e5;
-            padding: 7px 10px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-            font-weight: 600; font-size: 13px; width: 100%; outline: none; margin-top: 2px;
+            padding: 5px 8px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-weight: 600; font-size: 13px; width: 100%; min-width: 0; height: 30px; outline: none; margin: 0;
         }
         .key:focus { border-color: #3b82f6; }
         .key[readonly] { color: #d4a017; border-style: dashed; }
         .valwrap { position: relative; min-width: 0; }
         textarea.val {
             background: #141414; border: 1px solid #333; border-radius: 8px; color: #e5e5e5;
-            padding: 8px 10px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-            font-size: 12.5px; line-height: 1.5; width: 100%; min-height: 34px;
-            resize: none; overflow: hidden; outline: none; white-space: pre-wrap; word-break: break-all;
+            padding: 5px 8px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 12.5px; line-height: 1.5; width: 100%; min-height: 30px; max-height: 84px; display: block;
+            resize: none; overflow-y: auto; outline: none; white-space: pre-wrap; word-break: break-all;
         }
-        textarea.val:focus { border-color: #3b82f6; }
+        textarea.val:focus { border-color: #3b82f6; max-height: 240px; }
         textarea.val.badjson { border-color: #dc2626; }
         .badge {
             position: absolute; top: -7px; right: 8px; font-size: 10px; padding: 1px 6px;
@@ -325,7 +325,7 @@
             display: none; pointer-events: none;
         }
         .badge.on { display: inline-block; }
-        .del { background: none; border: none; color: #777; font-size: 15px; cursor: pointer; padding: 6px 4px; border-radius: 6px; margin-top: 4px; }
+        .del { background: none; border: none; color: #777; font-size: 15px; cursor: pointer; padding: 5px 4px; border-radius: 6px; margin: 0; min-height: 30px; }
         .del:hover { color: #ef4444; background: #2c2c2c; }
         .empty { color: #777; text-align: center; padding: 28px 0; font-size: 13px; }
         details#defaults { margin-top: 10px; border: 1px dashed #333; border-radius: 8px; padding: 6px 12px; }
@@ -338,7 +338,7 @@
         .hint { color: #8a8a8a; font-size: 12px; line-height: 1.6; padding: 8px 2px; }
         .gladd { display: flex; gap: 8px; padding: 6px 0 10px; }
         .gladd .key { width: 220px; flex: none; }
-        #footer { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-top: 1px solid #2c2c2c; }
+        #footer { display: flex; align-items: center; gap: 8px; padding: 7px 12px; border-top: 1px solid #2c2c2c; }
         #status { color: #9a9a9a; font-size: 12.5px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         #status.err { color: #ef4444; }
         #toast {
@@ -348,12 +348,41 @@
             box-shadow: 0 6px 24px rgba(0,0,0,.5); max-width: 80vw;
         }
         #toast.show { opacity: 1; }
+        #header, #toolbar, #footer { flex-shrink: 0; }
+        #title, #close { flex-shrink: 0; }
+        #sub, #status { min-width: 0; }
+        .row > * { min-width: 0; }
+        @media (max-width: 560px) {
+            body { padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+            #card { width: 100%; max-height: 100%; max-height: 100dvh; border-radius: 0; }
+            #toolbar { gap: 4px; }
+            .tab, .btn, #close, .dadd { min-height: 40px; }
+            .key, textarea.val, #search { font-size: 16px; }
+            .key { height: 36px; }
+            textarea.val { min-height: 36px; line-height: 1.4; }
+            textarea.val:focus { max-height: min(240px, 35dvh); }
+            .del { min-height: 36px; }
+            #footer { padding-bottom: max(7px, env(safe-area-inset-bottom)); }
+            #header, #toolbar, #footer { padding-left: 8px; padding-right: 8px; }
+            #body { padding-left: 8px; padding-right: 8px; }
+            .thead, .row { grid-template-columns: minmax(84px, 32%) minmax(0, 1fr) 36px; gap: 5px; }
+            .drow { grid-template-columns: minmax(80px, 32%) minmax(0, 1fr) auto; gap: 5px; }
+            #search { width: 120px; flex: 1 1 120px; min-width: 0; }
+            .gladd .key { width: auto; min-width: 0; flex: 1; }
+            .gladd .btn { flex-shrink: 0; }
+        }
     `;
 
     function buildUI() {
         if (S.built) return;
         S.built = true;
 
+        if (!document.querySelector('meta[name="viewport"]')) {
+            const viewport = document.createElement('meta');
+            viewport.name = 'viewport';
+            viewport.content = 'width=device-width, initial-scale=1, viewport-fit=cover';
+            document.head.appendChild(viewport);
+        }
         const style = document.createElement('style');
         style.textContent = CSS;
         document.head.appendChild(style);
@@ -522,9 +551,12 @@
         badge.className = 'badge' + (row.isJSON ? ' on' : '');
         badge.textContent = 'JSON';
         const ta = document.createElement('textarea');
+        ta.rows = 1;
         ta.className = 'val' + (row.badJSON ? ' badjson' : '');
         ta.value = row.value;
         ta.spellcheck = false;
+        ta.addEventListener('focus', () => fitArea(ta));
+        ta.addEventListener('blur', () => fitArea(ta));
         ta.addEventListener('input', () => {
             row.value = ta.value;
             checkJSON(row);

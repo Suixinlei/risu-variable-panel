@@ -82,6 +82,8 @@ RisuAI manages saves with an "active tab" protocol: once a **second tab** opens 
 
 ## Changelog
 
+- **1.2.0** Compact rows, bounded JSON editors, responsive phone layout with larger touch controls and 16px input text.
+
 - **1.1.2** Fix macro key mapping: bare `setvar` keys correctly map to `$`-prefixed chat storage keys.
 
 - **1.1.1** add `//@update-url`/`//@link` headers — one-click updates from GitHub raw

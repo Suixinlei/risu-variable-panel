@@ -1,0 +1,4 @@
+<!doctype html><html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Variable Panel · synthetic layout preview</title><body><script>
+const char = {chaId:'demo',name:'布局演示（虚构数据）',chatPage:0,chats:[{id:'demo-chat',name:'主剧情',scriptstate:Object.fromEntries([...Array.from({length:24},(_,i)=>['$stat_'+(i+1),String(i*5)]),['$inventory',JSON.stringify({gold:100,items:Array.from({length:20},(_,i)=>'item_'+i)})]]),GLGlobalVariables:{}}]};
+window.risuai={getCharacter:async()=>structuredClone(char),setCharacter:async c=>Object.assign(char,c),showContainer:async()=>{},hideContainer:async()=>{},parseRisuChat:async()=>'',addRisuChatListener:async()=>{},registerButton:async(o,cb)=>{if(o.location==='action')setTimeout(cb,0)}};
+</script><script src="../../variable-panel.js"></script></body></html>
